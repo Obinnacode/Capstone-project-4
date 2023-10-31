@@ -1,0 +1,152 @@
+* {
+    font-family: 'Poppins', sans-serif;
+}
+ul {
+    list-style: none;
+    padding: 0;
+    
+    text-align: center;
+}
+
+li {
+    display: inline;
+}
+
+a{
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #000;    
+}
+
+.header-nav-bar a {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.header-nav-bar a:hover {
+    background-color: #555;
+    
+}
+
+.header-nav-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    min-width: 100%;
+    background-color: #333;
+}
+h1{    
+    color: #fff;
+}
+
+.converter-section {    
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.converter-container {
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 30vh;
+    width: 70%;
+    border: solid 1px grey;    
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    
+}
+.radio-button{
+    width: 50%;
+    text-align: center;
+    height: 50px;
+    border: none; 
+    
+}
+.radio-button:hover{
+    cursor: pointer;
+}
+.radio-button:focus{
+    background-color: #555;
+}
+
+.calculation-nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #A9A9A9;
+    overflow: hidden;
+}
+
+.calculation-nav a {
+    width: 50%;
+    text-align: center;
+}
+
+.calculation-nav a:hover{
+    background-color: #555;    
+    color: #fff;    
+}
+a:focus{
+    background-color: #555;    
+    color: #fff; 
+}
+a.active{
+    background-color: white;    
+    color: black;
+}
+
+.converter-form{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding-top: 30px;
+}
+
+.amount{    
+    display: flex;      
+    flex-direction: column;
+    width: 20%;      
+}
+select{
+    height: 30px;
+    border-radius: 10px;
+}
+
+input{
+    height: 30px;
+    padding: 0;
+    border: none;
+    border: 1px solid black;
+    border-radius: 10px;    
+    
+}
+
+.swap{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    min-height: 50px;
+    min-width: 50px;
+    border-radius: 60%;
+    box-shadow: none;
+    padding: 0;
+    background-color: #fff;
+    border:solid 1px #555;
+}
+.swap:hover{
+    cursor: pointer;
+    background-color: #A9A9A9;
+}
+
+@media (max-width: 1000px) {
+    .converter-container{
+        width: 100%;
+    }
+    
+}

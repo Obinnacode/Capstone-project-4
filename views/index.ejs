@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>European Currency Exchange</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav class="header-nav-bar">
+            <h1>European Currency Converter</h1>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">FAQs</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="converter-section">
+        <div class="converter-container">
+            <div class="calculation-nav">
+                <button class="radio-button">Convert</button>
+                <button class="radio-button">Charts</button>
+                <!-- <a href="#">Convert</a>
+                <a href="#">Charts</a> -->
+            </div>
+            <div class="main-converter">
+                <form action="/" method="get" class="converter-form">
+                    <div class="amount">
+                        <label for="amount">Amount</label>
+                        <input type="number" id="amount" required>
+                    </div>
+                    <div class="amount">
+                        <label for="dropdown1">For</label>
+                        <select id="dropdown1" name="dropdown">
+                            <% for(let i =0; i<locals.content.currency.length; i++){%>
+                                <option value= <%= `${locals.content.currency[i]} - ${locals.content.currencyName[i]}` %>> <%= `${locals.content.currency[i]} - ${locals.content.currencyName[i]}` %> </option>
+                            <% }; %>                           
+                        </select>
+                    </div>
+                    <button class="swap" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z" />
+                        </svg></button>
+                    <div class="amount">
+                        <label for="dropdown2">To</label>
+                        <select id="dropdown2" name="dropdown">
+                            <% for(let i =0; i<locals.content.currency.length; i++){%>
+                                <option value= <%= `${locals.content.currency[i]} - ${locals.content.currencyName[i]}` %>> <%= `${locals.content.currency[i]} - ${locals.content.currencyName[i]}` %> </option>
+                            <% }; %>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div>
+
+
+            </div>
+        </div>
+
+    </section>
+
+    <section class="graph">
+
+
+    </section>
+
+    <script src="index.js" ></script>
+</body>
