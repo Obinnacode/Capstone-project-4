@@ -157,6 +157,10 @@ app.post("/chart", async (req, res) => {
     }
 
 })
+//Redirect users to homepage when invalid get route is used.
+app.get("*", (req, res)=>{
+    res.redirect("/")
+})
 
 
 
