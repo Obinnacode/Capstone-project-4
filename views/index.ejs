@@ -106,6 +106,7 @@
         const totalDuration = 3000;
         const delayBetweenPoints = totalDuration / data.length;
         const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+        //Animation for chart.
         const animation = {
             x: {
                 type: 'number',
@@ -134,6 +135,7 @@
                 }
             }
         };
+        //Creation of new chart.
         var myChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -142,35 +144,37 @@
                     label: `${currency1} / ${currency2}`,
                     data: data,
                     pointRadius: 0,            // Hide data points by default
-                    pointHoverRadius: 5,       // Set the hover radius to 5 (or your desired value)
+                    pointHoverRadius: 5,       // Set the radius of each data point when hovered over
                     pointHoverBackgroundColor: 'rgba(75, 192, 192, 1)', // Customize hover color
                     pointHoverBorderColor: 'rgba(75, 192, 192, 1)',     // Customize hover color
-                    borderWidth: 2,            // Customize line width
+                    borderWidth: 2,            // Customize line width or thickness
                     borderColor: 'grey',
                     fill: false
                 }]
             },
             options: {
-                animation,
+                animation, //Include animation.
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true //Start scale at 0
                     },
                     x: {
                         ticks: {
-                            display: false,
-                            maxTicksLimit: 10,                            
+                            display: false, //Don't display ticks or chart labels.
+                            maxTicksLimit: 10,                 
                             autoSkip: true,
                             autoSkipPadding: 10,
                         }
                     },
                 },
+                //Show data points when mouse is within data area.
                 hover: {
                     mode: 'nearest',
                     intersect: false,
                     axis: 'x',
                     enabled: true
                 },
+                //Show tooltip of nearest data point when mouse is within chart area.
                 interaction: {
                     intersect: false,
                     mode: 'index',
