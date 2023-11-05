@@ -30,7 +30,7 @@ let getData = async (req, res, next) => {
                 currency: currencies,
                 currencyName: currencyName,
                 prices: prices,
-            };            
+            };
 
         } catch (error) {
             if (error.response) {
@@ -42,7 +42,7 @@ let getData = async (req, res, next) => {
             }
         }
     }
-    
+
     next(); // Continue to the next middleware or route handler
 }
 
@@ -61,7 +61,13 @@ app.get("/", (req, res) => {
 app.post("/converter", (req, res) => {
 
     console.log("request body: ", req.body);
-    const amount = req.body.amount;
+    const amount = req.body.amount;    
+    //Use unary plus (+) to convert amount from string to number
+    const formatedAmount = (+amount).toLocaleString('en-US', {
+        style: 'decimal', // 'decimal' for general number formatting
+        minimumFractionDigits: 2, // Minimum number of fraction digits
+    });
+    console.log(formatedAmount);
     const currency1 = req.body.dropdown1;
     const currency2 = req.body.dropdown2;
     let convertedValue = "";
@@ -69,10 +75,14 @@ app.post("/converter", (req, res) => {
     //If blocks to convert currencies accordingly since default base currency of API is in EUR.
     if (currency1 === "EUR") {
         if (currency2 === "EUR") {
-            convertedValue = `${amount} EUR = ${amount} EUR`;
+            convertedValue = `${formatedAmount} EUR = ${formatedAmount} EUR`;
             currentPrice = 1;
         } else {
-            convertedValue = `${amount} EUR = ${+((amount * content.prices[currency2]).toFixed(2))} ${currency2}`;
+            const formatedValue = (+((amount * content.prices[currency2]).toFixed(2))).toLocaleString('en-US', {
+                style: 'decimal', // 'decimal' for general number formatting
+                minimumFractionDigits: 2, // Minimum number of fraction digits
+            });
+            convertedValue = `${formatedAmount} EUR = ${formatedValue} ${currency2}`;
             currentPrice = content.prices[currency2];
             console.log(convertedValue);
         }
@@ -80,13 +90,21 @@ app.post("/converter", (req, res) => {
         const currencyToEUR = amount / content.prices[currency1];
         currentPrice = (1 / content.prices[currency1]) * content.prices[currency2];
         //Calculate the converted value of the selected base currency. Note the use of unary plus operator '+' used to convert the string value of toFixed() method to a number
-        convertedValue = `${amount} ${currency1} = ${+((currencyToEUR * content.prices[currency2]).toFixed(2))} ${currency2}`
+        const formatedValue = (+((currencyToEUR * content.prices[currency2]).toFixed(2))).toLocaleString('en-US', {
+            style: 'decimal', // 'decimal' for general number formatting
+            minimumFractionDigits: 2, // Minimum number of fraction digits
+        });
+        convertedValue = `${formatedAmount} ${currency1} = ${formatedValue} ${currency2}`
         console.log(convertedValue);
     } else {
-        //if currency2 is EUR
+        //If currency2 is EUR
         const currencyToEUR = amount / content.prices[currency1];
         currentPrice = (1 / content.prices[currency1]);
-        convertedValue = `${amount} ${currency1} = ${+(currencyToEUR.toFixed(2))} ${currency2}`;
+        const formatedValue = (+(currencyToEUR.toFixed(2))).toLocaleString('en-US', {
+            style: 'decimal', // 'decimal' for general number formatting
+            minimumFractionDigits: 2, // Minimum number of fraction digits
+        });
+        convertedValue = `${formatedAmount} ${currency1} = ${formatedValue} ${currency2}`;
         console.log(convertedValue);
     }
 
