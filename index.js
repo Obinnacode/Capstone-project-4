@@ -29,12 +29,15 @@ app.get("/", async (req, res) => {
             prices: prices,
         }
 
-        res.render("index.ejs", { content: content, });
+        res.render("index.ejs", { 
+            content: content,
+            convertCheck: "checked",
+         });
     } catch (error) {
         if (error.response) {
             console.error(error.response.data)
         } else if (error.request) {
-            console.log("Request not sent: ")
+            console.log("Request not sent")
         } else {
             console.error(error.message);
         }
@@ -50,40 +53,108 @@ app.post("/converter", async (req, res) => {
     const currency1 = req.body.dropdown1;
     const currency2 = req.body.dropdown2;
     let convertedValue = "";
-    //If-blocks to convert currencies accordingly since default base currency is in EUR.
+    let currentPrice;
+    //If blocks to convert currencies accordingly since default base currency of API is in EUR.
     if (currency1 === "EUR") {
         if (currency2 === "EUR") {
-            convertedValue = `${amount} EUR = ${amount} EUR`
+            convertedValue = `${amount} EUR = ${amount} EUR`;
+            currentPrice = 1;
         } else {
             convertedValue = `${amount} EUR = ${+((amount * content.prices[currency2]).toFixed(2))} ${currency2}`;
+            currentPrice = content.prices[currency2];
             console.log(convertedValue);
         }
     } else if (currency2 !== "EUR") {
         const currencyToEUR = amount / content.prices[currency1];
+        currentPrice = (1/content.prices[currency1])*content.prices[currency2];
         //Calculate the converted value of the selected base currency. Note the use of unary plus operator '+' used to convert the string value of toFixed() method to a number
         convertedValue = `${amount} ${currency1} = ${+((currencyToEUR * content.prices[currency2]).toFixed(2))} ${currency2}`
         console.log(convertedValue);
     } else {
+        //if currency2 is EUR
         const currencyToEUR = amount / content.prices[currency1];
+        currentPrice = (1/content.prices[currency1]);
         convertedValue = `${amount} ${currency1} = ${+(currencyToEUR.toFixed(2))} ${currency2}`;
         console.log(convertedValue);
     }
+
 
     res.render("index.ejs", {
         content: content,
         conversion: convertedValue,
         currency1: currency1,
         currency2: currency2,
+        convertCheck: "checked",
+        currentPrice: +(currentPrice.toFixed(5)),
     });
 
 
 })
 
-app.post("/chart", async(req, res) => {
+app.post("/chart", async (req, res) => {
     const currency1 = req.body.dropdown1;
     const currency2 = req.body.dropdown2;
-    const chartData = await axios.get(`https://www.frankfurter.app/2021-01-01..?from=${currency1}&to=${currency2}`)
-    console.log(chartData.data);
+    let labels;
+    let chartDataValues = [];
+    if (currency1 === currency2) {
+        try {
+            console.log("Currencies are the same!")
+            const chartData = await axios.get(`https://www.frankfurter.app/2021-01-01..?from=${currency1}`);
+            //Extract each date key from data to form Chart Labels array.
+            labels = Object.keys(chartData.data.rates);
+            //Push 1 for each label tag
+            for(let i=0; i < labels.length; i++) {
+                chartDataValues.push(1);
+            }
+            res.render("index.ejs", {
+                content: content,
+                labels: JSON.stringify(labels), //Send data as JSON string, so EJS engine can process it properly.
+                data: JSON.stringify(chartDataValues), //Send data as JSON string, so EJS engine can process it properly.
+                currency1: currency1,
+                currency2: currency2,
+                chartCheck: "checked",
+            })            
+
+        } catch (error) {
+            if (error.response) {
+                console.error(error.response.data)
+            } else if (error.request) {
+                console.log("Request not sent")
+            } else {
+                console.error(error.message);
+            }
+        }
+    } else {
+        try {
+            const chartData = await axios.get(`https://www.frankfurter.app/2021-01-01..?from=${currency1}&to=${currency2}`);
+            //Extract each date key from data to form Chart Labels array.
+            labels = Object.keys(chartData.data.rates);
+            //Get chart data for each date.
+            const chartValues = Object.values(chartData.data.rates);
+            chartDataValues = chartValues.map(obj =>
+                Object.values(obj)[0]
+            );            
+            console.log(labels);
+            console.log(chartDataValues);
+            res.render("index.ejs", {
+                content: content,
+                labels: JSON.stringify(labels),
+                data: JSON.stringify(chartDataValues),
+                currency1: currency1,
+                currency2: currency2,
+                chartCheck: "checked",
+            })
+        } catch (error) {
+            if (error.response) {
+                console.error(error.response.data)
+            } else if (error.request) {
+                console.log("Request not sent")
+            } else {
+                console.error(error.message);
+            }
+        }
+
+    }
 
 })
 

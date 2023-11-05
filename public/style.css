@@ -1,6 +1,24 @@
 * {
     font-family: 'Poppins', sans-serif;
 }
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+}
+footer{
+    display: flex;
+    justify-content: center;
+    align-self: center;    
+    background-color: #000;
+    color: #fff;
+    width: 100%;    
+    text-align:center;
+    margin-top: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
 ul {
     list-style: none;
     padding: 0;
@@ -44,7 +62,7 @@ h1{
 
 .converter-section {    
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     margin-top: 20px;
     width: 100%;
@@ -54,22 +72,12 @@ h1{
     display:flex;
     flex-direction: column;
     justify-content: flex-start;
+    align-self: center;
     min-height: 30vh;
     width: 70%;
     border: solid 1px grey;    
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     
-}
-.radio-button{
-    width: 50%;
-    text-align: center;
-    height: 50px;
-    border: none; 
-    
-}
-.radio-button:hover{
-    cursor: pointer;
-    background-color: lightgray ;
 }
 
 .calculation-nav{
@@ -79,15 +87,23 @@ h1{
     background-color: #A9A9A9;
     overflow: hidden;
 }
-
-.calculation-nav a {
+.calculation-nav > label {
     width: 50%;
+    height: 50px;
     text-align: center;
+    padding-top: 10px;
+    box-sizing: border-box;
 }
 
-.calculation-nav a:hover{
-    background-color: #555;    
-    color: #fff;    
+.calculation-nav input[type=radio] {
+    display: none;
+}
+.calculation-nav input[type=radio]:checked + label {
+    background-color:#333;
+    color: #fff;
+}
+.calculation-nav label:hover{
+    cursor: pointer;
 }
 
 .active{
@@ -97,11 +113,15 @@ h1{
 
 .converter-form{
     display: flex;
+    width: 100%;
     flex-direction: row;
     justify-content: space-evenly;
     padding-top: 30px;
 }
-
+.flex-none{
+    flex:0 0 0;
+    display: none;
+}
 .amount{    
     display: flex;      
     flex-direction: column;
@@ -117,7 +137,8 @@ select{
     padding-left: 10px;
     border: none;
     border: 1px solid black;
-    border-radius: 10px;    
+    border-radius: 10px;  
+    box-sizing: border-box;  
     
 }
 
@@ -131,12 +152,14 @@ select{
     border-radius: 60%;
     box-shadow: none;
     padding: 0;
-    background-color: #fff;
+    background-color: #000;
+    color: #fff;
     border:solid 1px #555;
 }
 .swap:hover{
     cursor: pointer;
-    background-color: #A9A9A9;
+    background-color: #555;
+    color:#fff;
 }
 .submit-button{
     align-self: end;    
@@ -147,18 +170,110 @@ select{
     border-radius: 10px;
     border: 1px solid #555;
     min-width: 60px;
+    background-color: #000;
+    color: #fff;
     
 }
-.calculation-result>p{
+.submit-button > input:hover{
+    cursor: pointer;
+    background-color: #555;
+    color:#fff;
+}
+.result{
     color: #000;
     font-size: 2rem;
     font-weight: bold;
     padding-left: 3rem;
+    margin-bottom: 0;
+}
+.result + p{
+    font-size: 1rem;
+    padding-left: 3rem;
+    margin-top:0;
+}
+.calculation-result > button{
+    margin-left: 3rem;
+    margin-bottom: 1rem;
+    height: 30px;
+    border: none;
+    border-radius: 10px;
+    border: 1px solid #555;
+    min-width: 60px;
+    background-color: #000;
+    color: #fff;
+}
+.calculation-result > button:hover{
+    cursor: pointer;
+    background-color: #555;
+    color:#fff;
+}
+.hidden{
+    display: none;
+}
+.myChart{
+    margin-top: 3rem;
+    width: 70%;
+    align-self: center;
 }
 
 @media (max-width: 1000px) {
     .converter-container{
         width: 100%;
     }
+    .myChart{
+        width: 100%;
+    }
     
 }
+@media (max-width: 780px) {
+    .header-nav-bar{
+        flex-direction: column;
+        align-items: center;
+    }
+    
+}
+@media (max-width: 630px) {    
+    .converter-form{
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .submit-button{
+        align-self: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+        text-align: center;
+    }
+    .submit-button > input{
+        width: 60%;
+    }
+    .amount{
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .amount > input, .amount > select{
+        width: 60%;
+        align-self: center;
+    }
+    .swap{
+        margin-bottom: 10px ;
+        margin-top: 10px;
+    }
+    .calculation-result{
+        text-align: center;
+        padding: 0;
+    }
+    .calculation-result button{
+        margin-left: 0;
+    }
+    .result, .result+p{
+        padding: 0;
+    }
+    .myChart{
+        width: 100%;
+    }
+
+}
+

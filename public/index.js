@@ -8,37 +8,35 @@ function swapOptions() {
 
 var button = document.querySelector(".swap");
 button.addEventListener("click", swapOptions);
+const chartRadio = document.getElementById("chart");
 
-var radioButtons = document.querySelectorAll(".radio-button");
-radioButtons.forEach(function (i) {
-    i.addEventListener("click", function () {
-        radioButtons.forEach(function (j) {
-            j.classList.remove("active");
-        });
-        i.classList.add("active");
-    })
-});
+//hide elements not needed when chart tab is selected
+document.getElementById("chart").addEventListener("click", function() {
+    document.querySelector("input[value='View Chart']").classList.remove("hidden");
+    document.querySelector("input[value=Convert").classList.add("hidden");
+    document.querySelector(".calculation-result").classList.add("hidden");
+    document.querySelector(".qty").classList.add("hidden"); 
+    document.getElementById("amount").removeAttribute("required");      
+})
+//Undo changes when convert tab is selected
+document.getElementById("convert").addEventListener("click", function() {
+    document.querySelector("input[value='View Chart']").classList.add("hidden");
+    document.querySelector("input[value=Convert").classList.remove("hidden");
+    document.querySelector(".calculation-result").classList.remove("hidden");
+    document.querySelector(".qty").classList.remove("hidden"); 
+    document.getElementById("amount").setAttribute("required","true");    
+})
+
+if(chartRadio.checked){
+    document.querySelector("input[value='View Chart']").classList.remove("hidden");
+    document.querySelector("input[value=Convert").classList.add("hidden");
+    document.querySelector(".calculation-result").classList.add("hidden");
+    document.querySelector(".qty").classList.add("hidden"); 
+    document.getElementById("amount").removeAttribute("required");  
+}
 
 
-// var anchors = document.querySelectorAll('.calculation-nav>a');
-// anchors.forEach(function(anchor) {
-//   anchor.addEventListener('click', function() {
-//     // Set the background color and save the state in localStorage
-//     this.classList.add('active');
-//     localStorage.setItem('activeAnchor', this.textContent);
-//   });
-// });
-
-// // Check if an anchor was clicked previously and apply the background color
-// var activeAnchorText = localStorage.getItem('activeAnchor');
-// console.log("ActiveAnchorText: ", activeAnchorText);
-// if (activeAnchorText) {
-//   var activeAnchor = Array.from(anchors).find(function(anchor) {
-//     return anchor.textContent === activeAnchorText;
-//   });
-//   if (activeAnchor) {
-//     activeAnchor.classList.add('active');
-//   }
-// }
-
-localStorage.clear();
+document.querySelector(".calculation-result > button").addEventListener("click", function(){
+    document.getElementById("chart").click();
+    document.querySelector("input[value='View Chart']").click()
+})

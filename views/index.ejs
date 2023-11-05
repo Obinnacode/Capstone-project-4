@@ -4,19 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>European Currency Exchange</title>
+    <title>Currency Exchange</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
 </head>
 
 <body>
     <header>
         <nav class="header-nav-bar">
-            <h1>European Currency Converter</h1>
+            <h1>Currency Exchange</h1>
             <ul>
-                <li><a href="#">Home</a></li>
+                <li><a href="http://localhost:3000/">Home</a></li>
                 <li><a href="#">Features</a></li>
                 <li><a href="#">Pricing</a></li>
                 <li><a href="#">FAQs</a></li>
@@ -28,21 +29,27 @@
     <section class="converter-section">
         <div class="converter-container">
             <div class="calculation-nav">
-                <button class="radio-button">Convert</button>
-                <button class="radio-button">Charts</button>                
+                <input type="radio" name="option" id="convert" <%=locals.convertCheck %>>
+                <label for="convert">Convert</label>
+                <input type="radio" name="option" id="chart" <%=locals.chartCheck %>>
+                <label for="chart">Chart</label>
             </div>
             <div class="main-converter">
-                <form action="/converter" method="post" class="converter-form">
-                    <div class="amount">
+                <form method="post" class="converter-form">
+                    <div class="amount qty">
                         <label for="amount">Amount</label>
-                        <input type="number" id="amount" name="amount" required>
+                        <input type="number" id="amount" name="amount" step="0.01" required>
                     </div>
                     <div class="amount">
                         <label for="dropdown1">For</label>
                         <select id="dropdown1" name="dropdown1">
-                            <% for(let i =0; i<locals.content.currency.length; i++){%>
-                                <option value= <%= locals.content.currency[i] %> <%= locals.content.currency[i] === locals.currency1 ? 'selected' : '' %>> <%= `${locals.content.currency[i]} - ${locals.content.currencyName[i]}` %> </option>
-                            <% }; %>                           
+                            <% for(let i=0; i<locals.content.currency.length; i++){%>
+                                <!-- Note: I have used the conditional (tenary) statement in my <option> to set the selected currency when it is clicked -->
+                                <option value=<%=locals.content.currency[i] %>
+                                    <%= locals.content.currency[i]===locals.currency1 ? 'selected' : '' %>> <%=
+                                            `${locals.content.currency[i]} - ${locals.content.currencyName[i]}` %>
+                                </option>
+                                <% }; %>
                         </select>
                     </div>
                     <button class="swap" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -53,31 +60,123 @@
                     <div class="amount">
                         <label for="dropdown2">To</label>
                         <select id="dropdown2" name="dropdown2">
-                            <% for(let i =0; i<locals.content.currency.length; i++){%>
+                            <% for(let i=0; i<locals.content.currency.length; i++){%>
                                 <!-- Note: I have used the conditional (tenary) statement in my <option> to set the selected currency when it is clicked -->
-                                <option value= <%= locals.content.currency[i] %> <%= locals.content.currency[i] === locals.currency2 ? 'selected' : '' %>> <%= `${locals.content.currency[i]} - ${locals.content.currencyName[i]}` %> </option>
-                            <% }; %>
+                                <option value=<%=locals.content.currency[i] %>
+                                    <%= locals.content.currency[i]===locals.currency2 ? 'selected' : '' %>> <%=
+                                            `${locals.content.currency[i]} - ${locals.content.currencyName[i]}` %>
+                                </option>
+                                <% }; %>
                         </select>
                     </div>
                     <div class="submit-button">
-                        <input type="submit" value="Convert">
+                        <input type="submit" value="Convert" formaction="/converter">
+                        <input type="submit" value="View Chart" class="hidden" formaction="/chart">
                     </div>
                 </form>
             </div>
             <div class="calculation-result">
                 <% if(locals.conversion){ %>
-                <p><%= locals.conversion %></p>
-            <% }  %>
+                    <p class="result">
+                        <%= locals.conversion %>
+                    </p>
+                    <p><%=  `1 ${locals.currency1} = ${locals.currentPrice} ${locals.currency2}`%></p>
+                    <button type="button">Show Chart</button>
+                    <% } %>
 
             </div>
         </div>
-
+        <div class="myChart">
+            <canvas id="myChart"></canvas>
+        </div>
     </section>
+    <footer>
+        © obinnacode. All rights reserved
+    </footer>
 
-    <section class="graph">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js"></script>
+    <script type="">
+        const data = <%= locals.data %>;
+        const label = <%- locals.labels %>;
+        const currency1 = <%- JSON.stringify(locals.currency1) %>;
+        const currency2 = <%- JSON.stringify(locals.currency2) %>;
 
-
-    </section>
-
-    <script src="index.js" ></script>
+        console.log(currency1);
+        var ctx = document.getElementById('myChart').getContext('2d');
+        const totalDuration = 3000;
+        const delayBetweenPoints = totalDuration / data.length;
+        const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+        const animation = {
+            x: {
+                type: 'number',
+                easing: 'linear',
+                duration: delayBetweenPoints,
+                from: NaN, // the point is initially skipped
+                delay(ctx) {
+                    if (ctx.type !== 'data' || ctx.xStarted) {
+                        return 0;
+                    }
+                    ctx.xStarted = true;
+                    return ctx.index * delayBetweenPoints;
+                }
+            },
+            y: {
+                type: 'number',
+                easing: 'linear',
+                duration: delayBetweenPoints,
+                from: previousY,
+                delay(ctx) {
+                    if (ctx.type !== 'data' || ctx.yStarted) {
+                        return 0;
+                    }
+                    ctx.yStarted = true;
+                    return ctx.index * delayBetweenPoints;
+                }
+            }
+        };
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: label,
+                datasets: [{
+                    label: `${currency1} / ${currency2}`,
+                    data: data,
+                    pointRadius: 0,            // Hide data points by default
+                    pointHoverRadius: 5,       // Set the hover radius to 5 (or your desired value)
+                    pointHoverBackgroundColor: 'rgba(75, 192, 192, 1)', // Customize hover color
+                    pointHoverBorderColor: 'rgba(75, 192, 192, 1)',     // Customize hover color
+                    borderWidth: 2,            // Customize line width
+                    borderColor: 'grey',
+                    fill: false
+                }]
+            },
+            options: {
+                animation,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    },
+                    x: {
+                        ticks: {
+                            display: false,
+                            maxTicksLimit: 10,                            
+                            autoSkip: true,
+                            autoSkipPadding: 10,
+                        }
+                    },
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: false,
+                    axis: 'x',
+                    enabled: true
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+            }
+        });
+    </script>
+    <script src="index.js"></script>
 </body>
